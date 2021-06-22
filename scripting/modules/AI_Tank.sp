@@ -1,4 +1,5 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #define BoostForward 60.0 // Bhop
 
@@ -10,41 +11,41 @@ enum VelocityOverride {
 	VelocityOvr_InvertReuseVelocity
 };
 
-new Handle:hCvarTankBhop;
+Handle hCvarTankBhop;
 
 // Bibliography: 
 // TGMaster, Chanz - Infinite Jumping
 
-public Tank_OnModuleStart() {
-	hCvarTankBhop = CreateConVar("ai_tank_bhop", "0", "Flag to enable bhop facsimile on AI tanks");
+public Action Tank_OnModuleStart() {
+	hCvarTankBhop = CreateConVar("ai_tank_bhop", "1", "Flag to enable bhop facsimile on AI tanks");
 }
 
-public Tank_OnModuleEnd() {
+public Action Tank_OnModuleEnd() {
 }
 
 // Tank bhop and blocking rock throw
-public Action:Tank_OnPlayerRunCmd( tank, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon ) {
+public Action Tank_OnPlayerRunCmd(tank, &buttons, &impulse, float vel[3], float angles[3], &weapon ) {
 	// block rock throws
 	buttons &= ~IN_ATTACK2;
 	
-	if( bool:GetConVarBool(hCvarTankBhop) ) {
-		new flags = GetEntityFlags(tank);
+	if( int GetConVarBool(hCvarTankBhop) ) {
+		int flags = GetEntityFlags(tank);
 		
 		// Get the player velocity:
-		new Float:fVelocity[3];
+		float fVelocity[3];
 		GetEntPropVector(tank, Prop_Data, "m_vecVelocity", fVelocity);
-		new Float:currentspeed = SquareRoot(Pow(fVelocity[0],2.0)+Pow(fVelocity[1],2.0));
+		float currentspeed = SquareRoot(Pow(fVelocity[0],2.0)+Pow(fVelocity[1],2.0));
 		//PrintCenterTextAll("Tank Speed: %.1f", currentspeed);
 		
 		// Get Angle of Tank
-		decl Float:clientEyeAngles[3];
+		float clientEyeAngles[3];
 		GetClientEyeAngles(tank,clientEyeAngles);
 		
 		// LOS and survivor proximity
-		new Float:tankPos[3];
+		float tankPos[3];
 		GetClientAbsOrigin(tank, tankPos);
-		new iSurvivorsProximity = GetSurvivorProximity(tankPos);
-		new bool:bHasSight = bool:GetEntProp(tank, Prop_Send, "m_hasVisibleThreats"); //Line of sight to survivors
+		int iSurvivorsProximity = GetSurvivorProximity(tankPos);
+		int bHasSight = int GetEntProp(tank, Prop_Send, "m_hasVisibleThreats"); //Line of sight to survivors
 		
 		// Near survivors
 		if( bHasSight && (400 > iSurvivorsProximity > 100) && currentspeed > 190.0 ) { // Random number to make bhop?
@@ -84,9 +85,9 @@ public Action:Tank_OnPlayerRunCmd( tank, &buttons, &impulse, Float:vel[3], Float
 	return Plugin_Continue;	
 }
 
-stock Client_Push(client, Float:clientEyeAngle[3], Float:power, VelocityOverride:override[3]=VelocityOvr_None) {
-	decl Float:forwardVector[3],
-	Float:newVel[3];
+stock Client_Push(client, float clientEyeAngle[3], float power, VelocityOverride override[3]=VelocityOvr_None) {
+	float forwardVector[3],
+	float newVel[3];
 	
 	GetAngleVectors(clientEyeAngle, forwardVector, NULL_VECTOR, NULL_VECTOR);
 	NormalizeVector(forwardVector, forwardVector);
@@ -95,7 +96,7 @@ stock Client_Push(client, Float:clientEyeAngle[3], Float:power, VelocityOverride
 	
 	GetEntPropVector(client, Prop_Send, "m_vecOrigin", newVel);
 	
-	for( new i = 0; i < 3; i++ ) {
+	for( int i = 0; i < 3; i++ ) {
 		switch( override[i] ) {
 			case VelocityOvr_Velocity: {
 				newVel[i] = 0.0;

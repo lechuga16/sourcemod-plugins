@@ -29,21 +29,21 @@
  *
  * @return	Current pause state
  */
-native bool:IsInPause();
+(%N)
 
 /**
  * Called when a pause starts
  * If delayed pauses are on this will be called when the delay ends and the
  * pause actually begins
  */
-forward OnPause();
+forward void OnPause();
 
 /**
  * Called when the pause ends and the round goes live
  */
-forward OnUnpause();
+forward void OnUnpause();
 
-public SharedPlugin:__pl_pause =
+public SharedPlugin __pl_pause =
 {
         name = "pause",
         file = "pause.smx",
@@ -54,7 +54,7 @@ public SharedPlugin:__pl_pause =
 #endif
 };
 
-public __pl_pause_SetNTVOptional()
+public void __pl_pause_SetNTVOptional()
 {
         MarkNativeAsOptional("IsInPause");
 }
