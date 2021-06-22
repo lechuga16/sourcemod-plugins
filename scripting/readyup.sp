@@ -118,7 +118,7 @@ public void OnPluginStart()
 	l4d_ready_live_sound		= CreateConVar("l4d_ready_live_sound", DEFAULT_LIVE_SOUND, "The sound that plays when a round goes live");
 	l4d_ready_chuckle			= CreateConVar("l4d_ready_chuckle", "0", "Enable random moustachio chuckle during countdown");
 	l4d_ready_secret			= CreateConVar("l4d_ready_secret", "1", "Play something suck", _, true, 0.0, true, 1.0);
-	l4d_ready_afk 				= CreateConVar("l4d_ready_afk", "180", "Seconds before moving spectator to player.", _, true, 1.000);
+	l4d_ready_afk 				= CreateConVar("l4d_ready_afk", "180", "Seconds before moving the player to spectator.", _, true, 1.000);
 	
 	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
 	HookEvent("player_team", PlayerTeam_Event, EventHookMode_Pre);
